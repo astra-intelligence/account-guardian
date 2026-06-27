@@ -1,0 +1,85 @@
+<!-- Account Guardian — FAQ -->
+<section class="faq-section">
+  <div class="section-inner">
+    <span class="eyebrow-tag">FAQ</span>
+    <h2 class="section-headline centered">Common questions, straight answers.</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Does Account Guardian make changes to my Stripe account?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>No. We have read-only access to your Stripe data. We read your signals and send you alerts — we never change anything, adjust settings, or touch your money.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          How quickly will I know if something is wrong?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>We check your signals daily. If a threshold is crossed, you'll receive an alert the same day — before Stripe acts. In most cases, you'll know 2–4 weeks before Stripe would typically escalate.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          What exactly are the 5 risk signals you monitor?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>We monitor: dispute rate, refund rate, chargeback rate, revenue trend, and Stripe's internal risk flags. These are the signals Stripe uses to evaluate account health — we surface them to you before Stripe acts on them.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          What do the alerts actually look like?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Specific, actionable alerts like: "Your chargeback rate hit 2.1% — above Stripe's 1% threshold. Here's exactly what to do to bring it down." Not "something looks off." Real numbers, specific guidance, next steps.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          What happens after the 14-day trial?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Your trial ends with no credit card on file. If you want to continue, you subscribe at $79/month. If you don't, you lose access — no charges, no hassle.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Is my Stripe data secure?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Yes. We use read-only Stripe API access — we can never write to your account or move money. Data is encrypted in transit and at rest. We don't share your data with third parties, ever.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Can I cancel anytime?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Yes. Month-to-month, no contracts. Cancel from your dashboard in 30 seconds. No penalties, no questions asked.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleFaq(btn) {
+  const answer = btn.nextElementSibling;
+  const isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
+  if (!isOpen) {
+    answer.classList.add('open');
+    btn.querySelector('.faq-icon').textContent = '−';
+  }
+}
+</script>

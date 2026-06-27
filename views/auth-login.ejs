@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | Account Guardian</title>
+  <meta name="description" content="Sign in to your Account Guardian dashboard">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <%- include('partials/nav') %>
+
+  <section class="auth-section">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-mark">◆</span>
+        <span class="logo-text">ACCOUNT<span class="logo-i">GUARDIAN</span></span>
+      </div>
+      <h1 class="auth-headline">Welcome back</h1>
+      <p class="auth-sub">Sign in to access your Stripe monitoring dashboard.</p>
+
+      <div id="authError" class="auth-error" style="display:none;"></div>
+
+      <form class="auth-form" id="loginForm">
+        <div class="form-group">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="you@yourstore.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-primary btn-lg auth-submit" id="loginBtn">
+          Sign In →
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="/auth/signup" class="auth-link">Create one free</a>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
+
+<style>
+.auth-section { min-height: calc(100vh - 200px); display: flex; align-items: center; justify-content: center; padding: 4rem 1.5rem; }
+.auth-card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 3rem; max-width: 420px; width: 100%; }
+.auth-logo { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+.logo-mark { color: #00d4a1; font-size: 1.5rem; }
+.logo-text { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; color: #f9fafb; letter-spacing: 0.05em; }
+.logo-i { color: #00d4a1; }
+.auth-headline { font-family: 'Space Grotesk', sans-serif; font-size: 1.75rem; font-weight: 700; color: #f9fafb; margin: 0 0 0.5rem; }
+.auth-sub { color: #9ca3af; font-size: 0.95rem; margin-bottom: 2rem; }
+.auth-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.form-label { display: block; color: #d1d5db; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.4rem; }
+.form-input { width: 100%; padding: 0.75rem 1rem; background: #0d1117; border: 1px solid #374151; border-radius: 8px; color: #f9fafb; font-size: 0.95rem; box-sizing: border-box; }
+.form-input:focus { outline: none; border-color: #00d4a1; }
+.auth-submit { width: 100%; margin-top: 0.5rem; }
+.auth-footer { margin-top: 1.5rem; text-align: center; color: #9ca3af; font-size: 0.9rem; }
+.auth-link { color: #00d4a1; text-decoration: none; }
+.auth-link:hover { text-decoration: underline; }
+.auth-error { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); border-radius: 8px; padding: 0.75rem 1rem; color: #fca5a5; font-size: 0.9rem; margin-bottom: 1rem; }
+</style>
+
+<script>
+const form = document.getElementById('loginForm');
+const errorEl = document.getElementById('authError');
+const btn = document.getElementById('loginBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+
+  const fd = new FormData(form);
+  try {
+    const res = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: fd.get('email'), password: fd.get('password') }),
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      const returnTo = new URLSearchParams(window.location.search).get('return');
+      const redirect = returnTo && returnTo.startsWith('/') ? returnTo : data.redirect;
+      window.location.href = redirect;
+    } else {
+      errorEl.textContent = data.error || 'Login failed. Please try again.';
+      errorEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Sign In →';
+    }
+  } catch {
+    errorEl.textContent = 'Network error. Please check your connection.';
+    errorEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Sign In →';
+  }
+});
+</script>

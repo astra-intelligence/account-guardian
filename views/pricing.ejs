@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Account Guardian pricing — $79/month flat rate. 14-day free trial, cancel anytime. No credit card required to start.">
+  <title>Pricing — Account Guardian by Astramedia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    :root {
+      --bg: #0A0A0F;
+      --bg-surface: #111118;
+      --bg-card: #16161F;
+      --fg: #E8E8F0;
+      --fg-muted: #6B6B80;
+      --cyan: #00E5FF;
+      --cyan-dim: rgba(0, 229, 255, 0.12);
+      --green: #B4FF00;
+      --green-dim: rgba(180, 255, 0, 0.12);
+      --red: #FF3B5C;
+      --border: rgba(255, 255, 255, 0.07);
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--fg); font-family: var(--font-head); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    .nav {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,15,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-brand { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+    .nav-brand span { font-size: 0.65em; opacity: 0.65; vertical-align: super; }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a { font-size: 14px; color: var(--fg-muted); transition: color 0.15s; }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-links a.active { color: var(--fg); }
+    .nav-cta { display: flex; align-items: center; gap: 16px; font-size: 14px; }
+    .nav-email { font-family: var(--font-mono); color: var(--fg-muted); font-size: 13px; }
+    .btn-nav { display: inline-block; border: 1px solid var(--cyan); color: var(--cyan); font-family: var(--font-mono); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 4px; transition: all 0.2s; }
+    .btn-nav:hover { background: var(--cyan-dim); }
+
+    /* PAGE */
+    .page-wrap { padding: 80px 48px 120px; max-width: 900px; margin: 0 auto; }
+    .page-eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; color: var(--cyan); background: var(--cyan-dim); padding: 6px 12px; border-radius: 2px; margin-bottom: 24px; display: inline-block; }
+    .page-title { font-size: clamp(32px, 4vw, 52px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 16px; }
+    .page-sub { font-size: 18px; color: var(--fg-muted); line-height: 1.6; max-width: 580px; margin-bottom: 64px; }
+
+    /* PLAN CARD */
+    .plan-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 20px;
+      padding: 48px 56px;
+      max-width: 540px;
+      position: relative;
+      overflow: hidden;
+    }
+    .plan-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: var(--cyan-dim);
+      pointer-events: none;
+    }
+    .plan-badge { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; color: var(--cyan); background: var(--cyan-dim); padding: 5px 12px; border-radius: 2px; margin-bottom: 28px; display: inline-block; }
+    .plan-name { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+    .plan-price { display: flex; align-items: baseline; gap: 6px; margin-bottom: 12px; }
+    .plan-price .amt { font-size: 64px; font-weight: 700; font-family: var(--font-mono); letter-spacing: -0.03em; line-height: 1; }
+    .plan-price .per { font-size: 18px; color: var(--fg-muted); }
+    .plan-desc { font-size: 15px; color: var(--fg-muted); margin-bottom: 36px; }
+
+    /* FEATURES LIST */
+    .feature-list { list-style: none; margin-bottom: 40px; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .feature-list li:last-child { border-bottom: none; }
+    .check { color: var(--green); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* CTA */
+    .plan-cta { }
+    .plan-cta .btn-trial {
+      display: block;
+      background: var(--cyan);
+      color: #0A0A0F;
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 17px;
+      padding: 18px 36px;
+      border-radius: 4px;
+      text-align: center;
+      transition: opacity 0.2s, box-shadow 0.2s;
+      margin-bottom: 12px;
+    }
+    .plan-cta .btn-trial:hover { opacity: 0.9; box-shadow: 0 0 30px rgba(0, 229, 255, 0.4); }
+    .plan-cta .btn-logged-in {
+      display: block;
+      background: var(--green-dim);
+      color: var(--green);
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 17px;
+      padding: 18px 36px;
+      border-radius: 4px;
+      text-align: center;
+      border: 1px solid rgba(180,255,0,0.2);
+      transition: opacity 0.2s;
+      margin-bottom: 12px;
+    }
+    .plan-cta .btn-logged-in:hover { opacity: 0.85; }
+    .plan-note { font-size: 13px; color: var(--fg-muted); text-align: center; font-family: var(--font-mono); }
+
+    /* GUARANTEES */
+    .guarantees { display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap; }
+    .guarantee { flex: 1; min-width: 200px; display: flex; align-items: flex-start; gap: 14px; padding: 20px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; }
+    .guarantee-icon { font-size: 24px; flex-shrink: 0; }
+    .guarantee strong { display: block; font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .guarantee span { font-size: 13px; color: var(--fg-muted); line-height: 1.5; }
+
+    /* LOGGED-IN STATE */
+    .logged-in-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 32px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .logged-in-banner .li-text { font-size: 15px; color: var(--fg-muted); }
+    .logged-in-banner .li-text strong { color: var(--fg); }
+
+    /* FAQ */
+    .faq-section { margin-top: 72px; }
+    .faq-title { font-size: 28px; font-weight: 700; margin-bottom: 32px; letter-spacing: -0.01em; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-size: 16px; font-weight: 600; margin-bottom: 8px; cursor: pointer; }
+    .faq-a { font-size: 14px; color: var(--fg-muted); line-height: 1.7; display: none; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-q { color: var(--cyan); }
+
+    /* BACK LINK */
+    .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--fg-muted); margin-bottom: 48px; transition: color 0.15s; }
+    .back-link:hover { color: var(--fg); }
+    .back-link:hover svg path { stroke: var(--fg); }
+
+    @media (max-width: 600px) {
+      .page-wrap { padding: 40px 24px 80px; }
+      .plan-card { padding: 32px 28px; }
+      .plan-price .amt { font-size: 48px; }
+      .nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .guarantees { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">Account Guardian <span>by Astramedia</span></div>
+  <div class="nav-links">
+    <a href="/#features">Features</a>
+    <a href="/pricing" class="active">Pricing</a>
+    <a href="/audit">Free Audit</a>
+  </div>
+  <div class="nav-cta">
+    <% if (userEmail) { %>
+      <span class="nav-email"><%= userEmail %></span>
+      <a href="/dashboard" class="btn-nav">Dashboard</a>
+      <a href="#" id="logout-link" class="btn-nav" style="cursor:pointer; background:none; border:none; color:var(--cyan);">Sign Out</a>
+    <% } else { %>
+      <a href="/auth/login" class="btn-nav" style="margin-right: 8px;">Sign In</a>
+      <a href="/auth/signup" class="btn-nav">Get Started</a>
+    <% } %>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- BACK -->
+  <a href="/" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l-7 7 7 7" stroke="var(--fg-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to home
+  </a>
+
+  <!-- HEADER -->
+  <div class="page-eyebrow">PRICING</div>
+  <h1 class="page-title">Simple. One plan. No surprises.</h1>
+  <p class="page-sub">Everything you need to protect your Stripe account — daily monitoring, threshold alerts, and actionable remediation guides — in one flat rate.</p>
+
+  <!-- LOGGED-IN BANNER -->
+  <% if (userEmail) { %>
+  <div class="logged-in-banner">
+    <div class="li-text">Signed in as <strong><%= userEmail %></strong></div>
+    <a href="/dashboard" class="btn-nav" style="background: var(--cyan-dim);">Go to Dashboard →</a>
+  </div>
+  <% } %>
+
+  <!-- PLAN CARD -->
+  <div class="plan-card">
+    <div class="plan-badge">MOST POPULAR</div>
+    <div class="plan-name">Account Guardian</div>
+    <div class="plan-price">
+      <span class="amt">$79</span>
+      <span class="per">/month</span>
+    </div>
+    <div class="plan-desc">Everything included. Cancel anytime.</div>
+
+    <ul class="feature-list">
+      <li><span class="check">✓</span> Daily monitoring of all 5 risk signals</li>
+      <li><span class="check">✓</span> Threshold alerts with real numbers</li>
+      <li><span class="check">✓</span> Actionable remediation guides</li>
+      <li><span class="check">✓</span> Weekly account health digest</li>
+      <li><span class="check">✓</span> Alert history dashboard</li>
+      <li><span class="check">✓</span> Stripe read-only connection</li>
+      <li><span class="check">✓</span> Email alert delivery</li>
+      <li><span class="check">✓</span> Priority support</li>
+    </ul>
+
+    <div class="plan-cta">
+      <% if (userEmail) { %>
+        <a href="/dashboard?billing=upgrade" class="btn-logged-in">Upgrade to Paid →</a>
+        <p class="plan-note">Already on trial? Connect Stripe to activate.</p>
+      <% } else { %>
+        <a href="/buy" class="btn-trial">Start Your 14-Day Free Trial →</a>
+        <p class="plan-note">No credit card required to start</p>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- GUARANTEES -->
+  <div class="guarantees">
+    <div class="guarantee">
+      <div class="guarantee-icon">🛡</div>
+      <div>
+        <strong>14-day free trial</strong>
+        <span>No credit card required. Start monitoring today.</span>
+      </div>
+    </div>
+    <div class="guarantee">
+      <div class="guarantee-icon">💳</div>
+      <div>
+        <strong>Cancel anytime</strong>
+        <span>No long-term contracts. Month-to-month.</span>
+      </div>
+    </div>
+    <div class="guarantee">
+      <div class="guarantee-icon">🔒</div>
+      <div>
+        <strong>Read-only Stripe access</strong>
+        <span>Your data stays yours. We never write to your account.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <div class="faq-title">Common questions</div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What's included in the 14-day free trial?</div>
+      <div class="faq-a">Full access to Account Guardian — daily monitoring, all 5 signal types, alert emails, and the dashboard. No credit card required. If you don't connect Stripe and subscribe within 14 days, monitoring stops.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How does billing work?</div>
+      <div class="faq-a">$79/month, billed monthly. No annual discount for now. Cancel at any time from your Settings page — you'll keep access until the end of the current billing period.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What does "read-only Stripe connection" mean?</div>
+      <div class="faq-a">Account Guardian connects via Stripe Connect using read-only OAuth scope. We can only read your transaction data, dispute rates, and account metrics. We cannot initiate charges, refunds, or any write operations on your Stripe account.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Which Stripe signals are monitored?</div>
+      <div class="faq-a">Five signals: dispute rate, auth/decline rate, revenue trend (week-over-week), transaction velocity, and low volume detection. Each is calibrated to your baseline after connecting.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What happens if my thresholds are breached?</div>
+      <div class="faq-a">You'll receive an email alert immediately, with a link to a specific remediation guide for that signal. You can acknowledge the alert in the dashboard or adjust thresholds if it's a false positive.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can I adjust my thresholds?</div>
+      <div class="faq-a">Yes. After calibration, you can raise or lower any threshold in your dashboard. Changes take effect on the next daily scan.</div>
+    </div>
+  </div>
+
+</div><!-- /.page-wrap -->
+
+<script>
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+  }
+
+  // Logout
+  const logoutLink = document.getElementById('logout-link');
+  if (logoutLink) {
+    logoutLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    });
+  }
+</script>
+<!-- Polsia Analytics --><script>(function(){var slug="foundryiq-3";if(!slug)return;var vid=localStorage.getItem('polsia_vid');if(!vid){vid='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return (c==='x'?r:(r&0x3|0x8)).toString(16);});localStorage.setItem('polsia_vid',vid);}new Image().src='https://polsia.com/api/beacon/pixel?s='+encodeURIComponent(slug)+'&v='+encodeURIComponent(vid);})();</script>
+</body>
+</html>

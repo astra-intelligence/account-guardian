@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Stripe Audit | Account Guardian by Astramedia</title>
+  <meta property="og:title" content="Free Stripe Audit | Account Guardian by Astramedia">
+  <meta property="og:description" content="Get a free Stripe account health audit. We'll analyze your dispute rate, refund rate, and chargeback rate — and tell you if you're at risk before Stripe acts.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://foundryiq-3.polsia.app/audit">
+  <meta property="og:site_name" content="Account Guardian by Astramedia">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Free Stripe Audit | Account Guardian by Astramedia">
+  <meta name="twitter:description" content="Get a free Stripe account health audit. Tell you if you're at risk before Stripe acts.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+
+<%- include('partials/nav') %>
+
+<section class="audit-hero">
+  <div class="audit-hero-inner">
+    <div class="audit-hero-left">
+      <div class="eyebrow-tag">FREE AUDIT</div>
+      <h1 class="audit-headline">Get Your Free<br><span class="accent">Stripe Account Audit</span></h1>
+      <p class="audit-sub">
+        We'll analyze your Stripe account health and tell you if you're at risk — before Stripe does.
+      </p>
+
+      <form class="audit-form" id="auditForm" action="/api/audit" method="POST">
+        <div class="form-group">
+          <label for="email" class="form-label">Your email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-input"
+            placeholder="you@yourstore.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="website" class="form-label">
+            Your website or Shopify store
+            <span class="form-label-opt">(optional — helps us contextualize)</span>
+          </label>
+          <input
+            type="url"
+            id="website"
+            name="website"
+            class="form-input"
+            placeholder="https://yourstore.com"
+            autocomplete="url"
+          />
+        </div>
+        <button type="submit" class="btn-primary btn-lg audit-submit" id="auditSubmitBtn">
+          Send Me My Audit →
+        </button>
+        <p class="audit-form-note">No credit card · Your audit report arrives within minutes</p>
+      </form>
+
+      <div id="auditSuccess" class="audit-success" style="display:none;">
+        <div class="success-icon">✓</div>
+        <h2>You're in the queue.</h2>
+        <p>Check your inbox — we've sent a confirmation and your full audit report is on its way.</p>
+      </div>
+
+      <div id="auditError" class="audit-error" style="display:none;"></div>
+    </div>
+
+    <div class="audit-hero-right">
+      <div class="audit-report-preview">
+        <div class="preview-header">
+          <span class="preview-label">SAMPLE AUDIT REPORT</span>
+          <span class="status-badge status-ok">● DELIVERED</span>
+        </div>
+        <div class="preview-body">
+          <div class="preview-verdict verdict-high">⚠ ACCOUNT SHOWING WARNING SIGNS</div>
+          <table class="preview-table">
+            <thead>
+              <tr><th>Signal</th><th>You</th><th>Threshold</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Dispute Rate</td><td class="cell-danger">0.71%</td><td>0.50%</td></tr>
+              <tr><td>Refund Rate</td><td class="cell-warn">9.2%</td><td>8.0%</td></tr>
+              <tr><td>Chargeback Rate</td><td class="cell-ok">0.18%</td><td>0.30%</td></tr>
+            </tbody>
+          </table>
+          <div class="preview-action">
+            <strong>Recommended action:</strong> Review your dispute and refund patterns now — Stripe may be watching your account.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="audit-what">
+  <div class="section-inner">
+    <h2 class="section-headline centered">What you'll receive</h2>
+    <div class="audit-deliverables">
+      <div class="deliverable-card">
+        <div class="deliverable-icon">📊</div>
+        <h3>Dispute Rate Analysis</h3>
+        <p>Your dispute rate vs. Stripe's review threshold. If you're close, we'll tell you exactly how close.</p>
+      </div>
+      <div class="deliverable-card">
+        <div class="deliverable-icon">↩</div>
+        <h3>Refund Rate Trend</h3>
+        <p>30-day refund rate with context on whether it's normal for your category or a warning sign.</p>
+      </div>
+      <div class="deliverable-card">
+        <div class="deliverable-icon">🚨</div>
+        <h3>Active Risk Flags</h3>
+        <p>Any signal that's elevated or trending in the wrong direction, flagged with a plain-English explanation.</p>
+      </div>
+      <div class="deliverable-card">
+        <div class="deliverable-icon">🎯</div>
+        <h3>Your Action Plan</h3>
+        <p>One specific recommended action — not generic advice, something tied to what we actually found.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="audit-social-proof">
+  <div class="section-inner">
+    <div class="proof-grid">
+      <div class="proof-item">
+        <div class="proof-quote">"We had no idea our dispute rate was creeping up. The audit showed us at 0.68% — Stripe's review threshold is 0.5%. We fixed it in two weeks."</div>
+        <div class="proof-author">
+          <div class="proof-name">Marcus T.</div>
+          <div class="proof-role">DTC apparel · $400K/mo</div>
+        </div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-quote">"The audit was the push I needed. Saw my refund rate climbing and had no idea Stripe cared. Signed up that day."</div>
+        <div class="proof-author">
+          <div class="proof-name">Priya K.</div>
+          <div class="proof-role">Beauty brand · $120K/mo</div>
+        </div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-quote">"Free audit found a chargeback spike Stripe hadn't flagged yet. Saved us from a full review."</div>
+        <div class="proof-author">
+          <div class="proof-name">Jake R.</div>
+          <div class="proof-role">Supplements · $200K/mo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="audit-cta-section">
+  <div class="section-inner">
+    <div class="audit-final-cta">
+      <h2 class="audit-cta-headline">Don't wait for Stripe to find the problem first.</h2>
+      <p>Get your free audit in the next 2 minutes. Results in your inbox within minutes.</p>
+      <a href="#auditForm" class="btn-primary btn-lg" onclick="document.getElementById('auditForm').scrollIntoView({behavior:'smooth'}); return false;">
+        Get My Free Audit →
+      </a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>
+
+<script>
+  const form = document.getElementById('auditForm');
+  const submitBtn = document.getElementById('auditSubmitBtn');
+  const successEl = document.getElementById('auditSuccess');
+  const errorEl = document.getElementById('auditError');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    const formData = new FormData(form);
+    const payload = {
+      email: formData.get('email'),
+      website: formData.get('website'),
+    };
+
+    try {
+      const res = await fetch('/api/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        form.style.display = 'none';
+        successEl.style.display = 'block';
+      } else {
+        errorEl.textContent = data.error || data.message || 'Something went wrong. Please try again.';
+        errorEl.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Me My Audit →';
+      }
+    } catch {
+      errorEl.textContent = 'Network error. Please check your connection and try again.';
+      errorEl.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Me My Audit →';
+    }
+  });
+</script>

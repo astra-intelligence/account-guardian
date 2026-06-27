@@ -1,0 +1,21 @@
+{
+  "name": "express-postgres-templated",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "npm run preflight && npm run migrate",
+    "preflight": "node --check server.js && node --check routes/auth.js && node --check routes/onboarding.js && node --check routes/audit.js && node --check routes/billing.js && node --check routes/dashboard.js && node --check routes/webhooks.js && node --check routes/pricing.js && node --check routes/email-webhook.js && node --check routes/stripe-connect-smoke.js && node --check routes/investor-routes.js && node --check services/email.js && node --check services/stripe.js && node --check services/billing.js && node --check services/calibration.js && node --check services/support.js && node --check db/index.js && node --check db/merchants.js && node --check db/users.js && node --check db/signals.js && node --check db/thresholds.js && node --check db/stripe-tokens.js && node --check db/support-replies.js && node --check db/investors.js && node --check middleware/session.js && node --check middleware/auth.js && node --check lib/landing-context.js && node --check jobs/onboarding-cron.js && node --check jobs/trial-conversion-cron.js && node --check jobs/daily-monitoring-cron.js && node --check jobs/run-calibration.js && node --check jobs/support-inbox-cron.js",
+    "migrate": "node migrate.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "ejs": "^3.1.10",
+    "express": "^4.18.2",
+    "express-session": "^1.18.0",
+    "axios": "^1.6.0",
+    "openai": "^4.77.0",
+    "pg": "^8.11.3"
+  }
+}

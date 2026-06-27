@@ -1,0 +1,36 @@
+<nav class="nav">
+  <div class="nav-logo">
+    <a href="/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:0.5rem;">
+      <span class="logo-mark">◆</span>
+      <span class="logo-text">ACCOUNT<span class="logo-i">GUARDIAN</span> <span style="font-size:0.55em;opacity:0.55;vertical-align:super;">by Astramedia</span></span>
+    </a>
+  </div>
+  <div class="nav-links">
+    <a href="/audit" class="nav-link">Free Audit</a>
+    <a href="/#features" class="nav-link">Features</a>
+    <a href="/pricing" class="nav-link">Pricing</a>
+    <% if (typeof userEmail !== 'undefined' && userEmail) { %>
+      <a href="/dashboard" class="nav-link">Dashboard</a>
+    <% } %>
+  </div>
+  <div class="nav-cta">
+    <% if (typeof userEmail !== 'undefined' && userEmail) { %>
+      <span class="nav-user-email"><%= userEmail %></span>
+      <button class="btn-nav" id="logoutBtn" style="cursor:pointer;background:none;border:none;color:#00d4a1;font-family:'Space Grotesk',sans-serif;font-size:0.875rem;font-weight:600;">Sign Out</button>
+    <% } else { %>
+      <a href="/auth/login" class="nav-link" style="margin-right:0.75rem;">Sign In</a>
+      <a href="/auth/signup" class="btn-nav">Get Started</a>
+    <% } %>
+  </div>
+</nav>
+
+<script>
+(function() {
+  var btn = document.getElementById('logoutBtn');
+  if (btn) {
+    btn.addEventListener('click', function() {
+      fetch('/auth/logout', { method: 'POST' }).then(function() { window.location.href = '/'; });
+    });
+  }
+})();
+</script>

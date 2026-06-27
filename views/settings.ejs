@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Account Guardian by Astramedia</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    body { background: var(--bg); color: var(--fg); font-family: var(--font-head); -webkit-font-smoothing: antialiased; }
+    .container { max-width: 900px; margin: 0 auto; padding: 80px 48px; }
+    .page-header { margin-bottom: 48px; }
+    .page-title { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+    .page-sub { color: var(--fg-muted); font-size: 16px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+    .card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--fg); }
+    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--fg-muted); font-size: 14px; }
+    .info-value { font-size: 14px; font-family: var(--font-mono); font-weight: 500; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; font-family: var(--font-head); cursor: pointer; transition: all 0.2s; text-decoration: none; border: none; }
+    .btn-danger { background: rgba(255,59,92,0.1); border: 1px solid rgba(255,59,92,0.3); color: var(--red); }
+    .btn-danger:hover { background: rgba(255,59,92,0.2); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--fg); }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.15); }
+    .disconnect-section { margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .disconnect-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .disconnect-desc { color: var(--fg-muted); font-size: 14px; margin-bottom: 16px; }
+    .confirm-box { display: none; background: rgba(255,59,92,0.05); border: 1px solid rgba(255,59,92,0.2); border-radius: 8px; padding: 20px; margin-top: 16px; }
+    .confirm-box.show { display: block; }
+    .trust-note { font-size: 12px; color: var(--fg-muted); margin-top: 8px; }
+    .trust-note span { color: var(--green); }
+    .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; font-family: var(--font-mono); }
+    .status-active { background: var(--green-dim); color: var(--green); border: 1px solid rgba(180,255,0,0.2); }
+    .status-disconnected { background: rgba(255,59,92,0.1); color: var(--red); border: 1px solid rgba(255,59,92,0.2); }
+    .status-past_due { background: rgba(255,200,0,0.1); color: #FFC800; border: 1px solid rgba(255,200,0,0.2); }
+    .status-canceled { background: rgba(255,59,92,0.1); color: var(--red); border: 1px solid rgba(255,59,92,0.2); }
+    .status-none { background: rgba(255,255,255,0.05); color: var(--fg-muted); border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <!-- Nav -->
+  <nav style="border-bottom: 1px solid var(--border); padding: 20px 48px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="font-size: 16px; font-weight: 700; letter-spacing: -0.01em;">Account Guardian <span style="font-size:0.65em;opacity:0.65;vertical-align:super;">by Astramedia</span></div>
+    <div style="display: flex; gap: 24px; align-items: center;">
+      <a href="/dashboard?email=<%= encodeURIComponent(merchant.email) %>" style="color: var(--fg-muted); text-decoration: none; font-size: 14px;">Dashboard</a>
+      <a href="/settings?email=<%= encodeURIComponent(merchant.email) %>" style="color: var(--fg); text-decoration: none; font-size: 14px; font-weight: 600;">Settings</a>
+      <div style="font-size: 13px; color: var(--fg-muted);"><%= merchant.email %></div>
+      <a href="#" id="logout-link" style="color: var(--fg-muted); text-decoration: none; font-size: 13px; cursor: pointer;">Sign out</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">Settings</h1>
+      <p class="page-sub">Manage your Account Guardian settings and Stripe connection.</p>
+    </div>
+
+    <!-- Account Info -->
+    <div class="card">
+      <div class="card-title">Account</div>
+      <div class="info-row">
+        <span class="info-label">Email</span>
+        <span class="info-value"><%= merchant.email %></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Status</span>
+        <span class="info-value"><%= merchant.status %></span>
+      </div>
+    </div>
+
+    <!-- Stripe Connection -->
+    <div class="card">
+      <div class="card-title">Stripe Connection</div>
+      <div class="info-row">
+        <span class="info-label">Stripe Account</span>
+        <span class="info-value"><%= merchant.stripe_account_id || 'Not connected' %></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Connection Status</span>
+        <span class="info-value">
+          <% if (connected) { %>
+            <span class="status-badge status-active">● Connected</span>
+          <% } else { %>
+            <span class="status-badge status-disconnected">○ Disconnected</span>
+          <% } %>
+        </span>
+      </div>
+    </div>
+
+    <!-- Subscription -->
+    <div class="card">
+      <div class="card-title">Subscription</div>
+      <div class="info-row">
+        <span class="info-label">Plan</span>
+        <span class="info-value">$79/month</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Status</span>
+        <span class="info-value">
+          <% if (merchant.subscription_status === 'active') { %>
+            <span class="status-badge status-active">● Active</span>
+          <% } else if (merchant.subscription_status === 'trialing') { %>
+            <span class="status-badge" style="background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.2);">◌ Trialing</span>
+          <% } else if (merchant.subscription_status === 'past_due') { %>
+            <span class="status-badge status-past_due">⚠ Past Due</span>
+          <% } else if (merchant.subscription_status === 'canceled') { %>
+            <span class="status-badge status-canceled">○ Canceled</span>
+          <% } else { %>
+            <span class="status-badge status-none">○ Not subscribed</span>
+          <% } %>
+        </span>
+      </div>
+      <% if (merchant.subscription_status === 'active' || merchant.subscription_status === 'trialing') { %>
+        <div style="margin-top: 20px;">
+          <p style="color: var(--fg-muted); font-size: 14px; margin-bottom: 16px;">
+            Cancel your subscription. You'll continue to have access until the end of the current billing period.
+          </p>
+          <button class="btn btn-danger" onclick="showCancelConfirm()">Cancel Subscription</button>
+          <div id="cancel-confirm-box" class="confirm-box">
+            <div style="font-weight: 600; margin-bottom: 8px; color: var(--red);">Cancel your subscription?</div>
+            <p style="color: var(--fg-muted); font-size: 14px; margin-bottom: 16px;">
+              You'll keep access until the end of the billing period. After that, monitoring will stop and alerts will stop firing.
+            </p>
+            <div style="display: flex; gap: 12px;">
+              <a href="/billing/cancel?email=<%= encodeURIComponent(merchant.email) %>" class="btn btn-danger">Yes, cancel at period end</a>
+              <button class="btn btn-outline" onclick="hideCancelConfirm()">Keep subscription</button>
+            </div>
+          </div>
+        </div>
+      <% } else if (merchant.subscription_status === 'past_due') { %>
+        <div style="margin-top: 20px; padding: 16px; background: rgba(255,200,0,0.05); border: 1px solid rgba(255,200,0,0.2); border-radius: 8px; margin-bottom: 16px;">
+          <p style="font-size: 14px; color: #FFC800; margin: 0;">Payment failed. Please update your payment method to avoid service interruption.</p>
+        </div>
+        <a href="/billing/checkout?email=<%= encodeURIComponent(merchant.email) %>" class="btn" style="background: #635BFF; color: #fff;">
+          Update Payment Method
+        </a>
+      <% } else if (!merchant.subscription_status || merchant.subscription_status === 'none' || merchant.subscription_status === 'canceled') { %>
+        <div style="margin-top: 20px;">
+          <p style="color: var(--fg-muted); font-size: 14px; margin-bottom: 16px;">No active subscription.</p>
+          <a href="/billing/checkout?email=<%= encodeURIComponent(merchant.email) %>" class="btn" style="background: #635BFF; color: #fff;">
+            Subscribe — $79/month
+          </a>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Stripe Access -->
+    <div class="card">
+      <div class="card-title">Stripe Access</div>
+      <% if (connected) { %>
+        <p class="disconnect-desc">Revoke Account Guardian's read-only access to your Stripe account. Monitoring will stop and alerts will stop firing.</p>
+        <button class="btn btn-danger" onclick="showConfirm()">Disconnect Stripe</button>
+        <div id="confirm-box" class="confirm-box">
+          <div style="font-weight: 600; margin-bottom: 8px; color: var(--red);">Are you sure?</div>
+          <p style="color: var(--fg-muted); font-size: 14px; margin-bottom: 16px;">This will immediately stop all monitoring and remove your Stripe connection from Account Guardian.</p>
+          <div style="display: flex; gap: 12px;">
+            <a href="/auth/stripe/disconnect?email=<%= encodeURIComponent(merchant.email) %>" class="btn btn-danger">Yes, disconnect</a>
+            <button class="btn btn-outline" onclick="hideConfirm()">Cancel</button>
+          </div>
+        </div>
+        <p class="trust-note"><span>Read-only.</span> Account Guardian only reads — we never write to your Stripe account.</p>
+      <% } else { %>
+        <p class="disconnect-desc">Connect your Stripe account to start monitoring.</p>
+        <a href="/dashboard?email=<%= encodeURIComponent(merchant.email) %>" class="btn" style="background: #635BFF; color: #fff;">
+          Go to Dashboard to Connect
+        </a>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    function showConfirm() {
+      document.getElementById('confirm-box').classList.add('show');
+    }
+    function hideConfirm() {
+      document.getElementById('confirm-box').classList.remove('show');
+    }
+    function showCancelConfirm() {
+      document.getElementById('cancel-confirm-box').classList.add('show');
+    }
+    function hideCancelConfirm() {
+      document.getElementById('cancel-confirm-box').classList.remove('show');
+    }
+    document.getElementById('logout-link').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await fetch('/auth/logout', { method: 'POST' });
+        window.location.href = '/';
+      } catch {
+        window.location.href = '/';
+      }
+    });
+  </script>
+</body>
+</html>

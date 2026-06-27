@@ -1,0 +1,25 @@
+# Account Guardian — Polsia Configuration
+
+[[crons]]
+name = "onboarding-cron"
+schedule = "0 */4 * * *"
+command = "node jobs/onboarding-cron.js"
+description = "Sends follow-up emails to unconnected merchants (24h+) and triggers audits for newly-connected merchants."
+
+[[crons]]
+name = "trial-conversion-cron"
+schedule = "0 9 * * *"
+command = "node jobs/trial-conversion-cron.js"
+description = "Processes the 6-email trial sequence: Day 7 mid-trial check-in, Day 12 trial ending soon, Day 14 conversion request."
+
+[[crons]]
+name = "daily-monitoring-cron"
+schedule = "0 8 * * *"
+command = "node jobs/daily-monitoring-cron.js"
+description = "Pulls Stripe signals for all connected merchants, evaluates signals against calibrated (or fixed fallback) thresholds, fires alert emails per violation with remediation steps, logs to DB."
+
+[[crons]]
+name = "calibration-recalibrate-cron"
+schedule = "0 7 * * 1"
+command = "node jobs/run-calibration.js --recalibrate"
+description = "Recalibrates thresholds for merchants whose last calibration is 90+ days old. Re-derives baseline from 90-day rolling Stripe history. Merchants with insufficient history keep conservative defaults."

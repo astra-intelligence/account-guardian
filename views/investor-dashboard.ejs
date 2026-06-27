@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investor Dashboard — FoundryIQ</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/investor.css">
+  <style>
+    :root {
+      --green: #B4FF00;
+      --green-dim: rgba(180,255,0,0.12);
+      --yellow: #FFC800;
+      --yellow-dim: rgba(255,200,0,0.10);
+      --red: #FF3B5C;
+      --red-dim: rgba(255,59,92,0.10);
+      --cyan: #00E5FF;
+      --cyan-dim: rgba(0,229,255,0.12);
+      --bg: #0A0A0F;
+      --bg-surface: #111118;
+      --bg-card: #16161F;
+      --fg: #E8E8F0;
+      --fg-muted: #6B6B80;
+      --border: rgba(255,255,255,0.07);
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--fg); font-family: var(--font-head); -webkit-font-smoothing: antialiased; }
+  </style>
+</head>
+<body class="investor-body">
+
+<!-- NAV -->
+<nav class="inv-nav">
+  <div class="inv-nav-brand">
+    <span class="brand-name">FoundryIQ</span>
+    <span class="brand-tag">INVESTOR PORTAL</span>
+  </div>
+  <div class="inv-nav-right">
+    <span class="inv-nav-email"><%= investor.email %></span>
+    <form id="logout-form" method="POST" action="/investor/logout" style="display:inline;">
+      <input type="hidden" name="_method" value="DELETE">
+      <span class="inv-nav-logout" id="logout-btn" style="background:none; border:1px solid var(--border); padding:6px 14px; border-radius:6px; font-size:12px; font-family:var(--font-mono); color:var(--fg-muted); cursor:pointer;">Sign out</span>
+    </form>
+  </div>
+</nav>
+
+<div class="inv-container">
+
+  <!-- PAGE HEADER -->
+  <div style="margin-bottom:40px;">
+    <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; color:var(--cyan); text-transform:uppercase; margin-bottom:8px;">Portfolio Overview</div>
+    <h1 style="font-size:32px; font-weight:700; letter-spacing:-0.02em; margin-bottom:6px;">
+      Good <%= new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening' %>, <%= investor.name ? investor.name.split(' ')[0] : investor.email.split('@')[0] %>.
+    </h1>
+    <p style="font-size:15px; color:var(--fg-muted);">
+      <% if (summary.total_merchants === 0) { %>
+        No investments tracked yet.
+      <% } else { %>
+        Monitoring <strong style="color:var(--fg)"><%= summary.total_merchants %></strong> investment<%= summary.total_merchants !== 1 ? 's' : '' %> across <strong style="color:var(--fg)"><%= summary.portfolio_count %></strong> portfolio<%= summary.portfolio_count !== 1 ? 's' : '' %>.
+      <% } %>
+    </p>
+  </div>
+
+  <!-- ══ SUMMARY STATS ROW ══ -->
+  <div class="inv-summary-row">
+
+    <div class="inv-stat-card">
+      <div class="inv-stat-eyebrow">Portfolios</div>
+      <div class="inv-stat-value cyan"><%= summary.portfolio_count %></div>
+      <div class="inv-stat-sub">investment groups</div>
+    </div>
+
+    <div class="inv-stat-card">
+      <div class="inv-stat-eyebrow">Total Investments</div>
+      <div class="inv-stat-value"><%= summary.total_merchants %></div>
+      <div class="inv-stat-sub">active merchant accounts</div>
+    </div>
+
+    <div class="inv-stat-card">
+      <div class="inv-stat-eyebrow">90-Day Revenue</div>
+      <div class="inv-stat-value <%= summary.total_recent_revenue > 0 ? 'green' : 'muted' %>">
+        <%= summary.total_recent_revenue > 0
+          ? '$' + summary.total_recent_revenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+          : '—' %>
+      </div>
+      <div class="inv-stat-sub">combined recent revenue</div>
+    </div>
+
+    <div class="inv-stat-card">
+      <div class="inv-stat-eyebrow">Alerts (90d)</div>
+      <div class="inv-stat-value <%= summary.total_alerts_90d > 0 ? 'yellow' : 'green' %>"><%= summary.total_alerts_90d %></div>
+      <div class="inv-stat-sub">threshold breaches</div>
+    </div>
+
+  </div>
+
+  <!-- ══ ACTIVE COMMITMENTS ══ -->
+  <div class="inv-section">
+    <div class="inv-section-header">
+      <div class="inv-section-title">Active Commitments</div>
+    </div>
+
+    <% if (summary.total_merchants === 0) { %>
+    <div class="inv-portfolio-card">
+      <div class="inv-empty-state">
+        <div class="inv-empty-icon">📊</div>
+        <div class="inv-empty-title">No commitments yet</div>
+        <div class="inv-empty-desc">Add portfolio views to start tracking investment performance.</div>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="inv-commitments-grid">
+      <div class="inv-commit-card">
+        <div class="inv-commit-label">Portfolio Groups</div>
+        <div class="inv-commit-value" style="color:var(--cyan)"><%= summary.portfolio_count %></div>
+        <div class="inv-commit-sub">investment portfolios</div>
+      </div>
+      <div class="inv-commit-card">
+        <div class="inv-commit-label">Total Merchants</div>
+        <div class="inv-commit-value"><%= summary.total_merchants %></div>
+        <div class="inv-commit-sub">monitored accounts</div>
+      </div>
+      <div class="inv-commit-card">
+        <div class="inv-commit-label">90d Alerts</div>
+        <div class="inv-commit-value <%= summary.total_alerts_90d > 0 ? 'yellow' : 'green' %>"><%= summary.total_alerts_90d %></div>
+        <div class="inv-commit-sub">threshold breaches</div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <!-- ══ PORTFOLIOS ══ -->
+  <div class="inv-section">
+    <div class="inv-section-header">
+      <div class="inv-section-title">Portfolios</div>
+      <% if (portfolios.length > 0) { %>
+        <span class="inv-section-badge"><%= portfolios.length %> portfolio<%= portfolios.length !== 1 ? 's' : '' %></span>
+      <% } %>
+    </div>
+
+    <% if (portfolios.length === 0) { %>
+    <div class="inv-portfolio-card">
+      <div class="inv-empty-state">
+        <div class="inv-empty-icon">📁</div>
+        <div class="inv-empty-title">No portfolios</div>
+        <div class="inv-empty-desc">Portfolios will appear here once they are assigned to your account.</div>
+      </div>
+    </div>
+    <% } else { %>
+
+    <div class="inv-portfolio-list">
+
+      <% portfolios.forEach(function(portfolio) { %>
+
+      <div class="inv-portfolio-card">
+        <div class="inv-portfolio-header">
+          <div>
+            <div class="inv-portfolio-name"><%= portfolio.name %></div>
+            <% if (portfolio.description) { %>
+              <div class="inv-portfolio-meta" style="margin-top:4px;"><%= portfolio.description %></div>
+            <% } %>
+          </div>
+          <div style="display:flex; gap:12px; align-items:center;">
+            <span class="inv-view-count"><%= portfolio.view_count %> <%= portfolio.view_count === 1 ? 'merchant' : 'merchants' %></span>
+            <span class="inv-portfolio-meta"><%= new Date(portfolio.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) %></span>
+          </div>
+        </div>
+
+        <% if (portfolio.views.length === 0) { %>
+        <div style="padding:32px; text-align:center; color:var(--fg-muted); font-size:14px;">
+          No merchant accounts linked to this portfolio yet.
+        </div>
+        <% } else { %>
+
+        <!-- Views table -->
+        <table class="inv-views-table">
+          <thead>
+            <tr>
+              <th>Merchant</th>
+              <th>Status</th>
+              <th>Revenue (avg)</th>
+              <th>Alerts (90d)</th>
+              <th>Documents</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% portfolio.views.forEach(function(view) { %>
+            <% const hasAlerts = view.aggregates && parseInt(view.aggregates.total_alerts || 0) > 0; %>
+
+            <!-- Aggregate status from latest metrics -->
+            <% function getAccountStatus(view) {
+              if (!view.recent_metrics || view.recent_metrics.length === 0) return 'none';
+              const latest = view.recent_metrics[0];
+              if (!latest) return 'none';
+              const hasAlerts = parseInt(latest.alert_count || 0) > 0;
+              if (hasAlerts) return 'alert';
+              if (latest.dispute_rate > 0.03 || latest.auth_rate > 0.05) return 'watching';
+              return 'healthy';
+            } %>
+            <% const accountStatus = getAccountStatus(view); %>
+
+            <tr>
+              <td>
+                <div class="inv-merchant-name"><%= view.nickname || 'Unnamed Merchant' %></div>
+                <div class="inv-merchant-email"><%= view.merchant_email %></div>
+              </td>
+              <td>
+                <% if (accountStatus === 'healthy') { %>
+                  <span class="inv-status-pill inv-pill-healthy">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 6px rgba(180,255,0,0.5);"></span>
+                    Healthy
+                  </span>
+                <% } else if (accountStatus === 'watching') { %>
+                  <span class="inv-status-pill inv-pill-watching">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--yellow);display:inline-block;box-shadow:0 0 6px rgba(255,200,0,0.5);"></span>
+                    Watching
+                  </span>
+                <% } else if (accountStatus === 'alert') { %>
+                  <span class="inv-status-pill inv-pill-alert">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;box-shadow:0 0 6px rgba(255,59,92,0.5);"></span>
+                    Alert
+                  </span>
+                <% } else { %>
+                  <span class="inv-status-pill inv-pill-none">No data</span>
+                <% } %>
+              </td>
+              <td>
+                <% const avgRev = view.aggregates && view.aggregates.avg_revenue
+                  ? parseFloat(view.aggregates.avg_revenue)
+                  : null; %>
+                <% if (avgRev !== null && avgRev > 0) { %>
+                  <span class="inv-metric green">$<%= avgRev.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></span>
+                  <div class="inv-merchant-email" style="font-size:10px;">avg / period</div>
+                <% } else { %>
+                  <span class="inv-metric muted">—</span>
+                <% } %>
+              </td>
+              <td>
+                <% const totalAlerts = view.aggregates ? parseInt(view.aggregates.total_alerts || 0) : 0; %>
+                <span class="inv-alert-tag <%= totalAlerts > 0 ? 'inv-alert-active' : 'inv-alert-none' %>">
+                  <%= totalAlerts %> alert<%= totalAlerts !== 1 ? 's' : '' %>
+                </span>
+              </td>
+              <td>
+                <span class="inv-doc-badge">
+                  <%= view.document_count %> doc<%= view.document_count !== 1 ? 's' : '' %>
+                </span>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+
+        <% } %>
+      </div>
+
+      <% }); %>
+    </div><!-- /.inv-portfolio-list -->
+
+    <% } %>
+  </div>
+
+  <!-- ══ FUNDING ROUND HISTORY ══ -->
+  <div class="inv-section">
+    <div class="inv-section-header">
+      <div class="inv-section-title">Funding Round History</div>
+    </div>
+
+    <div class="inv-portfolio-card" style="padding:24px 28px;">
+      <% if (fundingRounds.length === 0) { %>
+      <div style="text-align:center; color:var(--fg-muted); padding:40px 0; font-size:14px;">
+        No funding rounds recorded for your portfolio.
+      </div>
+      <% } else { %>
+      <% fundingRounds.forEach(function(round) { %>
+      <div class="inv-round-card">
+        <span class="inv-round-badge"><%= round.round_type %></span>
+        <div style="flex:1;">
+          <div class="inv-round-name"><%= round.round_name || round.round_type %></div>
+          <div class="inv-round-date"><%= new Date(round.raised_at || round.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></div>
+        </div>
+        <div class="inv-round-amount">
+          <% if (round.amount_raised) { %>
+            $<%= (parseFloat(round.amount_raised) / 1000000).toFixed(1) %>M
+          <% } else { %>
+            —
+          <% } %>
+        </div>
+      </div>
+      <% }); %>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- ══ CAP TABLE ══ -->
+  <div class="inv-section">
+    <div class="inv-section-header">
+      <div class="inv-section-title">Cap Table Position</div>
+    </div>
+
+    <div class="inv-portfolio-card">
+      <table class="inv-cap-table">
+        <thead>
+          <tr>
+            <th>Shareholder</th>
+            <th>Share Type</th>
+            <th>Shares</th>
+            <th>Ownership %</th>
+            <th>Vesting</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (capTable.length === 0) { %>
+          <tr>
+            <td colspan="5" style="text-align:center; color:var(--fg-muted); padding:40px; font-size:14px;">
+              No cap table records found.
+            </td>
+          </tr>
+          <% } else { %>
+          <% capTable.forEach(function(row) { %>
+          <tr>
+            <td><%= row.shareholder_name %></td>
+            <td style="font-family:var(--font-mono); font-size:12px; color:var(--cyan);"><%= row.share_type || 'Common' %></td>
+            <td><%= parseInt(row.shares || 0).toLocaleString() %></td>
+            <td><%= row.ownership_pct ? parseFloat(row.ownership_pct).toFixed(2) + '%' : '—' %></td>
+            <td style="font-family:var(--font-mono); font-size:12px; color:var(--fg-muted);"><%= row.vesting_status || 'Fully vested' %></td>
+          </tr>
+          <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ DISTRIBUTION HISTORY ══ -->
+  <div class="inv-section">
+    <div class="inv-section-header">
+      <div class="inv-section-title">Distribution History</div>
+    </div>
+
+    <div class="inv-portfolio-card">
+      <table class="inv-dist-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th style="text-align:right;">Amount</th>
+            <th style="text-align:right;">Per Share</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (distributions.length === 0) { %>
+          <tr>
+            <td colspan="4" style="text-align:center; color:var(--fg-muted); padding:40px; font-size:14px;">
+              No distributions recorded.
+            </td>
+          </tr>
+          <% } else { %>
+          <% distributions.forEach(function(d) { %>
+          <tr>
+            <td><%= new Date(d.distributed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></td>
+            <td style="font-family:var(--font-mono); font-size:12px; color:var(--cyan);"><%= d.distribution_type || 'Dividend' %></td>
+            <td style="text-align:right; font-weight:600;">$<%= (parseFloat(d.amount || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 }) %></td>
+            <td style="text-align:right; font-family:var(--font-mono); font-size:12px; color:var(--fg-muted);">
+              <%= d.per_share ? '$' + parseFloat(d.per_share).toFixed(4) : '—' %>
+            </td>
+          </tr>
+          <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /.inv-container -->
+
+<script>
+  // ── LOGOUT ─────────────────────────────────────────
+  document.getElementById('logout-btn').addEventListener('click', async function() {
+    try {
+      await fetch('/investor/logout', { method: 'POST' });
+    } catch(e) {}
+    window.location.href = '/investor/login';
+  });
+</script>
+</body>
+</html>
