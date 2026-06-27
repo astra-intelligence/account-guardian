@@ -1,10 +1,28 @@
 services:
   - type: web
     runtime: node
-    name: app
-    buildCommand: npm install
+    name: account-guardian
+    buildCommand: npm install && npm run migrate
     startCommand: npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: STRIPE_CLIENT_ID
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: APP_URL
+        value: https://accountguardian.astraintelligence.co
+      - key: POSTMARK_API_KEY
+        sync: false
+      - key: POLSIA_API_KEY
+        sync: false
+      - key: POLSIA_API_URL
+        value: https://polsia.com/api/proxy/ai
+      - key: SESSION_SECRET
+        value: c47fc26ebabb83002279ec2f4ba937d0677e4b87b805f2a4421cd009e0b3e6ba
