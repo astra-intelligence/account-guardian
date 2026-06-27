@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /api/
+
+Sitemap: https://accountguardian.polsia.app/sitemap.xml
