@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <%- include('partials/styles') %>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">ACCOUNT<span>GUARDIAN</span></div>
+    </div>
+
+    <div class="badge badge-warning">⚠ REVENUE DROP ALERT</div>
+    <h1><%= merchantName %>, your revenue dropped <%= Math.abs(signalValue * 100).toFixed(0) %>% week-over-week.</h1>
+    <p class="subhead"><%= dateStr %> · Account Guardian monitoring</p>
+
+    <p>Your revenue has dropped by more than the <span class="highlight"><%= Math.abs(threshold * 100).toFixed(0) %>% WoW</span> threshold. This could signal payment failures, account restrictions, or a deliberate reduction in Stripe's acceptance rate.</p>
+
+    <div class="value-row">
+      <div class="value-card">
+        <div class="label">WOW REVENUE CHANGE</div>
+        <div class="value signal-value-danger"><%= (signalValue * 100).toFixed(1) %>%</div>
+      </div>
+      <div class="value-card">
+        <div class="label">THRESHOLD</div>
+        <div class="value signal-threshold"><%= (threshold * 100).toFixed(0) %>%</div>
+      </div>
+    </div>
+
+    <div class="action-box action-box-warning">
+      <h2>Recommended: Investigate the drop immediately</h2>
+      <p>Stripe sometimes reduces acceptance rates without notifying you until revenue tanks. Log into the Stripe dashboard and check the "Payment failures" report. Look for an "account under review" banner at the top of your dashboard. Check your email for any Stripe notifications you may have missed. If payments are failing silently, Stripe may be blocking transactions from certain regions or card types — respond to any open review before it escalates.</p>
+    </div>
+
+    <p>For a full remediation guide, visit: <a href="<%= appUrl %>/guides/revenue-drop" class="guide-link"><%= appUrl %>/guides/revenue-drop</a></p>
+
+    <a href="<%= dashboardUrl %>" class="cta">View Your Dashboard →</a>
+
+    <div class="footer">
+      Account Guardian by Astramedia · Monitoring Stripe accounts so you don't get surprised<br>
+      Questions? Reply to this email.
+    </div>
+  </div>
+</body>
+</html>

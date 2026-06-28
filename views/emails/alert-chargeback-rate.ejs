@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <%- include('partials/styles') %>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">ACCOUNT<span>GUARDIAN</span></div>
+    </div>
+
+    <div class="badge badge-alert">⚠ CHARGEBACK RATE ALERT</div>
+    <h1><%= merchantName %>, your chargeback rate hit <%= (signalValue * 100).toFixed(2) %>%.</h1>
+    <p class="subhead"><%= dateStr %> · Account Guardian monitoring</p>
+
+    <p>Your chargeback rate has crossed our warning threshold of <span class="highlight"><%= (threshold * 100).toFixed(2) %>%</span>. Chargebacks are the most severe risk signal — Stripe can initiate a formal review or restrict your account at elevated levels.</p>
+
+    <div class="value-row">
+      <div class="value-card">
+        <div class="label">CURRENT CHARGEBACK RATE</div>
+        <div class="value signal-value-danger"><%= (signalValue * 100).toFixed(2) %>%</div>
+      </div>
+      <div class="value-card">
+        <div class="label">THRESHOLD</div>
+        <div class="value signal-threshold"><%= (threshold * 100).toFixed(2) %>%</div>
+      </div>
+      <div class="value-card">
+        <div class="label">OVER BY</div>
+        <div class="value signal-value-danger">+<%= ((signalValue - threshold) * 100).toFixed(2) %>%</div>
+      </div>
+    </div>
+
+    <div class="action-box action-box-danger">
+      <h2>Recommended: Act now to mitigate chargebacks</h2>
+      <p>Chargebacks are the most serious signal Stripe monitors. Each chargeback carries fees and counts against your account health. Immediate steps: log into Stripe and review the reason codes on each chargeback. Respond to any that are representable with compelling evidence. Enable Stripe Radar's advanced fraud protection to catch fraudulent transactions before they capture. Consider implementing 3D Secure authentication for high-risk transactions.</p>
+    </div>
+
+    <p>For a full remediation guide, visit: <a href="<%= appUrl %>/guides/high-chargeback-rate" class="guide-link"><%= appUrl %>/guides/high-chargeback-rate</a></p>
+
+    <a href="<%= dashboardUrl %>" class="cta">View Your Dashboard →</a>
+
+    <div class="footer">
+      Account Guardian by Astramedia · Monitoring Stripe accounts so you don't get surprised<br>
+      Questions? Reply to this email.
+    </div>
+  </div>
+</body>
+</html>

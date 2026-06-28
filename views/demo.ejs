@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo — Account Guardian by Astramedia</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    :root {
+      --green: #B4FF00;
+      --green-dim: rgba(180,255,0,0.12);
+      --yellow: #FFC800;
+      --yellow-dim: rgba(255,200,0,0.10);
+      --red: #FF3B5C;
+      --red-dim: rgba(255,59,92,0.10);
+      --cyan: #00E5FF;
+      --cyan-dim: rgba(0,229,255,0.12);
+      --bg: #0A0A0F;
+      --bg-surface: #111118;
+      --bg-card: #16161F;
+      --fg: #E8E8F0;
+      --fg-muted: #6B6B80;
+      --border: rgba(255,255,255,0.07);
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--fg); font-family: var(--font-head); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── DEMO BANNER ───────────────────────────────────────── */
+    .demo-banner {
+      background: linear-gradient(90deg, rgba(0,229,255,0.12), rgba(180,255,0,0.08));
+      border-bottom: 1px solid rgba(0,229,255,0.2);
+      padding: 10px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      backdrop-filter: blur(8px);
+    }
+    .demo-banner span {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .demo-banner a {
+      color: var(--fg);
+      font-family: var(--font-head);
+      font-weight: 600;
+      padding: 4px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      transition: all 0.15s;
+      margin-left: 4px;
+    }
+    .demo-banner a:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    .nav {
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 44px; /* below demo banner */
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-brand { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+    .nav-brand .demo-tag {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--cyan);
+      background: var(--cyan-dim);
+      border: 1px solid rgba(0,229,255,0.25);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a { font-size: 14px; color: var(--fg-muted); transition: color 0.15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--fg); }
+
+    /* ── LAYOUT ────────────────────────────────────────────── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 48px 80px; }
+
+    /* ── STATUS HEADER ─────────────────────────────────────── */
+    .status-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+      margin-bottom: 40px;
+      padding: 28px 32px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .status-main { flex: 1; }
+    .status-eyebrow { font-size: 11px; font-family: var(--font-mono); letter-spacing: 0.12em; color: var(--fg-muted); text-transform: uppercase; margin-bottom: 10px; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+    .status-healthy { background: var(--green-dim); color: var(--green); border: 1px solid rgba(180,255,0,0.25); }
+    .status-watching { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(255,200,0,0.25); }
+    .status-alert { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,59,92,0.25); }
+    .status-none { background: rgba(255,255,255,0.04); color: var(--fg-muted); border: 1px solid var(--border); }
+    .status-detail { font-size: 13px; color: var(--fg-muted); margin-top: 8px; font-family: var(--font-mono); }
+    .status-right { display: flex; flex-direction: column; gap: 12px; min-width: 240px; align-items: flex-end; }
+    .status-chip { font-size: 12px; font-family: var(--font-mono); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-surface); color: var(--fg-muted); }
+    .status-chip .val { color: var(--green); font-weight: 600; }
+    .status-chip.warn .val { color: var(--yellow); }
+    .status-chip.error .val { color: var(--red); }
+
+    /* ── SECTION TITLES ───────────────────────────────────── */
+    .section-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .section-header .section-title { margin-bottom: 0; }
+
+    /* ── CARDS ────────────────────────────────────────────── */
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 28px; }
+
+    /* ── SIGNAL GRID ──────────────────────────────────────── */
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .signal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 18px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .signal-card:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-1px); }
+    .signal-card.expanded { border-color: rgba(0,229,255,0.3); }
+    .signal-card .signal-name { font-size: 12px; font-family: var(--font-mono); color: var(--fg-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+    .signal-card .signal-value { font-size: 24px; font-weight: 700; font-family: var(--font-mono); letter-spacing: -0.02em; line-height: 1; margin-bottom: 8px; }
+    .signal-card .signal-threshold { font-size: 11px; color: var(--fg-muted); font-family: var(--font-mono); }
+    .signal-card .signal-status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .dot-green { background: var(--green); box-shadow: 0 0 6px rgba(180,255,0,0.5); }
+    .dot-yellow { background: var(--yellow); box-shadow: 0 0 6px rgba(255,200,0,0.5); }
+    .dot-red { background: var(--red); box-shadow: 0 0 6px rgba(255,59,92,0.5); }
+    .dot-muted { background: var(--fg-muted); }
+
+    .signal-status-label { font-size: 12px; font-weight: 600; }
+    .status-normal .signal-status-label { color: var(--green); }
+    .status-near .signal-status-label { color: var(--yellow); }
+    .status-exceeded .signal-status-label { color: var(--red); }
+    .status-none-label { color: var(--fg-muted); }
+
+    /* bar fill */
+    .signal-bar-wrap { margin-top: 12px; }
+    .signal-bar-bg { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .signal-bar-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+
+    /* chart expand */
+    .signal-chart-wrap {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .signal-card.expanded .signal-chart-wrap { display: block; }
+    .chart-canvas-wrap { height: 80px; position: relative; }
+    canvas.signal-chart { width: 100%; height: 80px; display: block; }
+    .chart-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; font-family: var(--font-mono); color: var(--fg-muted); }
+    .no-data-label { font-size: 12px; color: var(--fg-muted); font-family: var(--font-mono); margin-top: 8px; text-align: center; }
+
+    /* ── ALERT HISTORY ────────────────────────────────────── */
+    .filter-row { display: flex; gap: 8px; }
+    .filter-btn {
+      font-size: 12px; font-family: var(--font-mono);
+      padding: 5px 12px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--fg-muted); cursor: pointer; transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--fg); }
+    .filter-btn.active { background: var(--cyan-dim); color: var(--cyan); border-color: rgba(0,229,255,0.3); }
+
+    .alert-list { margin-top: 4px; }
+    .alert-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .alert-row:last-child { border-bottom: none; }
+    .alert-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .alert-meta { flex: 1; min-width: 0; }
+    .alert-signal-type { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .alert-meta-sub { font-size: 12px; font-family: var(--font-mono); color: var(--fg-muted); }
+    .alert-value { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--fg); text-align: right; min-width: 80px; }
+    .alert-status-tag { font-size: 11px; font-family: var(--font-mono); padding: 3px 8px; border-radius: 4px; }
+    .tag-active { background: var(--red-dim); color: var(--red); }
+    .tag-acked { background: rgba(255,255,255,0.05); color: var(--fg-muted); }
+    .alert-link { font-size: 12px; font-family: var(--font-mono); color: var(--cyan); padding: 4px 10px; border: 1px solid rgba(0,229,255,0.2); border-radius: 6px; transition: all 0.15s; flex-shrink: 0; }
+    .alert-link:hover { background: var(--cyan-dim); }
+    .no-alerts { text-align: center; padding: 40px 0; color: var(--fg-muted); font-size: 14px; }
+    .no-alerts-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.4; }
+
+    /* ── REMEDIATION GUIDES ───────────────────────────────── */
+    .guide-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .guide-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg-surface);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .guide-card:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.03); }
+    .guide-card.focused { border-color: rgba(255,200,0,0.35); background: rgba(255,200,0,0.04); }
+    .guide-icon { font-size: 20px; margin-bottom: 8px; }
+    .guide-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .guide-desc { font-size: 11px; color: var(--fg-muted); line-height: 1.4; }
+    .focused-label { font-size: 10px; font-family: var(--font-mono); color: var(--yellow); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; display: block; }
+
+    /* ── DEMO DISCLAIMER ───────────────────────────────────── */
+    .demo-disclaimer {
+      background: var(--bg-surface);
+      border: 1px solid rgba(0,229,255,0.15);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+      color: var(--fg-muted);
+    }
+    .demo-disclaimer-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .demo-disclaimer a {
+      color: var(--cyan);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .demo-disclaimer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── BUTTONS ──────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 8px;
+      font-size: 14px; font-weight: 600; font-family: var(--font-head);
+      cursor: pointer; transition: all 0.2s; border: none;
+    }
+    .btn-stripe { background: #635BFF; color: #fff; }
+    .btn-stripe:hover { background: #5046e5; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--fg); }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.15); }
+    .btn-cyan { background: var(--cyan); color: #0A0A0F; font-weight: 700; }
+    .btn-cyan:hover { background: #00c8e8; }
+
+    /* ── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .signal-grid { grid-template-columns: repeat(3, 1fr); }
+      .guide-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-header { flex-wrap: wrap; }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 20px 20px 60px; }
+      .nav { padding: 0 20px; }
+      .signal-grid { grid-template-columns: repeat(2, 1fr); }
+      .guide-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- DEMO BANNER -->
+<div class="demo-banner">
+  <span>⏵ Demo Mode</span>
+  This is a simulated product walkthrough with mock data.
+  <a href="/auth/signup">↗ Start Free Trial</a>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    Account Guardian
+    <span class="demo-tag">Demo</span>
+    <span style="font-size:0.6em;opacity:0.6;vertical-align:super;">by Astramedia</span>
+  </div>
+  <div class="nav-links">
+    <a href="/demo" class="active">Dashboard</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/auth/signup" style="color: var(--green); font-weight: 600;">Get Started →</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       DEMO DISCLAIMER CARD
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="demo-disclaimer">
+    <span class="demo-disclaimer-icon">🔄</span>
+    <span>
+      This dashboard shows mock data for demonstration purposes.
+      No Stripe account is connected.
+      <a href="/auth/signup">Connect your Stripe account →</a>
+    </span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 1 — ACCOUNT STATUS HEADER
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="status-header">
+
+    <div class="status-main">
+      <div class="status-eyebrow">Account Status</div>
+      <% if (status.color === 'green') { %>
+        <span class="status-badge status-healthy">
+          <span class="signal-status-dot dot-green"></span>
+          Healthy
+        </span>
+      <% } else if (status.color === 'yellow') { %>
+        <span class="status-badge status-watching">
+          <span class="signal-status-dot dot-yellow"></span>
+          Watching <%= status.detail ? status.detail : '' %>
+        </span>
+      <% } else if (status.color === 'red') { %>
+        <span class="status-badge status-alert">
+          <span class="signal-status-dot dot-red"></span>
+          Alert Fired<%= status.detail ? ' — ' + status.detail : '' %>
+        </span>
+      <% } else { %>
+        <span class="status-badge status-none">
+          <span class="signal-status-dot dot-muted"></span>
+          No data yet
+        </span>
+      <% } %>
+      <div class="status-detail">
+        Last scan: Today at 03:14 UTC
+      </div>
+    </div>
+
+    <div class="status-right">
+      <div class="status-chip">
+        <span style="color:var(--fg-muted)">Stripe</span>
+        <span class="val">● Connected</span>
+      </div>
+      <div class="status-chip">
+        <span style="color:var(--fg-muted)">Plan</span>
+        <span class="val">Active — $79/mo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 2 — CURRENT SIGNAL VALUES
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section-header">
+    <div class="section-title">Signal Monitor</div>
+    <% if (alertCount > 0) { %>
+      <span class="status-badge status-alert" style="font-size:12px; padding: 4px 12px;"><%= alertCount %> unacknowledged</span>
+    <% } %>
+  </div>
+
+  <div class="signal-grid" id="signal-grid">
+    <% signalCards.forEach(function(card) { %>
+    <div class="signal-card <%= card.signal_type === 'risk_flag' ? 'expanded' : '' %>"
+         data-type="<%= card.signal_type %>"
+         onclick="toggleSignal(this)">
+      <div class="signal-name"><%= card.label %></div>
+
+      <% if (card.value !== null) { %>
+        <div class="signal-value"><%= card.value %></div>
+        <div class="signal-status-label status-<%= card.status %>">
+          <span class="signal-status-dot dot-<%= card.status === 'normal' ? 'green' : card.status === 'near' ? 'yellow' : 'red' %>"></span>
+          <%= card.status === 'normal' ? 'Normal' : card.status === 'near' ? 'Near threshold' : 'Exceeded' %>
+        </div>
+        <% if (card.threshold != null) { %>
+          <div class="signal-threshold">Threshold: <%= card.threshold %></div>
+        <% } %>
+        <div class="signal-bar-wrap">
+          <div class="signal-bar-bg">
+            <div class="signal-bar-fill" style="width:<%= card.pct %>%; background:<%= card.status === 'normal' ? 'var(--green)' : card.status === 'near' ? 'var(--yellow)' : 'var(--red)' %>"></div>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="signal-value" style="color:var(--fg-muted); font-size:18px;">—</div>
+        <div class="signal-status-label status-none-label">No data yet</div>
+      <% } %>
+
+      <div class="signal-chart-wrap" id="chart-<%= card.signal_type %>">
+        <div class="chart-canvas-wrap">
+          <canvas id="canvas-<%= card.signal_type %>" class="signal-chart" data-type="<%= card.signal_type %>"></canvas>
+        </div>
+        <div class="chart-meta">
+          <span>30 days ago</span>
+          <span>Today</span>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 3 — ALERT HISTORY
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="section-header">
+      <div class="section-title">Alert History</div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="window.location='/demo'">All</button>
+      </div>
+    </div>
+
+    <div class="alert-list">
+      <% if (allAlerts && allAlerts.length > 0) { %>
+        <% allAlerts.forEach(function(alert) { %>
+        <div class="alert-row">
+          <div class="alert-dot" style="background:<%= alert.acknowledged ? 'var(--fg-muted)' : 'var(--red)' %>; box-shadow: <%= alert.acknowledged ? 'none' : '0 0 6px rgba(255,59,92,0.5)' %>"></div>
+          <div class="alert-meta">
+            <div class="alert-signal-type"><%= alert.signal_type.replace('_', ' ') %></div>
+            <div class="alert-meta-sub"><%= new Date(alert.fired_at).toLocaleString() %></div>
+          </div>
+          <div class="alert-value"><%= parseFloat(alert.signal_value).toFixed(4) %></div>
+          <div class="alert-status-tag <%= alert.acknowledged ? 'tag-acked' : 'tag-active' %>">
+            <%= alert.acknowledged ? 'Acknowledged' : 'Active' %>
+          </div>
+          <a href="#" class="alert-link" onclick="showAlertDetail('<%= alert.id %>', '<%= alert.signal_type %>', <%= alert.signal_value %>, <%= alert.threshold_crossed %>, '<%= new Date(alert.fired_at).toISOString() %>', '<%= alert.acknowledged %>'); return false;">View</a>
+        </div>
+        <% }); %>
+      <% } else { %>
+        <div class="no-alerts">
+          <div class="no-alerts-icon">✓</div>
+          <div>No alerts to show</div>
+          <div style="font-size:12px; margin-top:4px;">Signal thresholds are holding — nothing breached yet.</div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 4 — REMEDIATION GUIDE QUICK LINKS
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="card">
+    <div class="section-title" style="margin-bottom: 20px;">Remediation Guides</div>
+    <div class="guide-grid">
+      <% const guides = [
+        { id: 'dispute', name: 'Dispute Rate', desc: 'High dispute rate — includes chargebacks', icon: '⚖', focused: mostRecentAlert && mostRecentAlert.signal_type === 'dispute_rate' },
+        { id: 'auth', name: 'Auth Rate', desc: 'Failed payment attempts / decline rate', icon: '↩', focused: mostRecentAlert && mostRecentAlert.signal_type === 'auth_rate' },
+        { id: 'revenue', name: 'Revenue Trend', desc: 'Week-over-week revenue change', icon: '📈', focused: mostRecentAlert && mostRecentAlert.signal_type === 'revenue_trend' },
+        { id: 'velocity', name: 'Tx Velocity', desc: 'Unusual transaction patterns', icon: '⚡', focused: mostRecentAlert && mostRecentAlert.signal_type === 'transaction_velocity' },
+        { id: 'volume', name: 'Low Volume', desc: 'Sudden transaction volume drop', icon: '📉', focused: mostRecentAlert && mostRecentAlert.signal_type === 'low_volume' }
+      ]; %>
+      <% guides.forEach(function(guide) { %>
+      <a href="/guides/<%= guide.id %>" class="guide-card <%= guide.focused ? 'focused' : '' %>">
+        <% if (guide.focused) { %>
+          <span class="focused-label">← Most recent</span>
+        <% } %>
+        <div class="guide-icon"><%= guide.icon %></div>
+        <div class="guide-name"><%= guide.name %></div>
+        <div class="guide-desc"><%= guide.desc %></div>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 5 — FEATURE SUMMARY / CTA
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="card" style="text-align: center; padding: 48px 32px;">
+    <div style="font-size: 24px; font-weight: 700; margin-bottom: 12px;">
+      Ready to see your real data?
+    </div>
+    <p style="color: var(--fg-muted); font-size: 15px; max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
+      Connect your Stripe account and start monitoring your 5 risk signals in minutes.
+      No credit card required for the 14-day free trial.
+    </p>
+    <a href="/auth/signup" class="btn btn-stripe" style="font-size: 16px; padding: 14px 32px;">
+      Start Free Trial — $79/mo →
+    </a>
+    <div style="margin-top: 12px; font-size: 12px; color: var(--fg-muted); font-family: var(--font-mono);">
+      No credit card required · 14-day free trial
+    </div>
+  </div>
+
+</div><!-- /.container -->
+
+<!-- ALERT DETAIL MODAL -->
+<div id="alert-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200; align-items:center; justify-content:center;">
+  <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:36px; max-width:480px; width:90%;">
+    <div style="font-size:20px; font-weight:700; margin-bottom:20px;" id="modal-signal"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+      <div style="padding:16px; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border);">
+        <div style="font-size:11px; color:var(--fg-muted); font-family:var(--font-mono); margin-bottom:4px;">VALUE AT ALERT</div>
+        <div style="font-size:24px; font-weight:700; font-family:var(--font-mono);" id="modal-value"></div>
+      </div>
+      <div style="padding:16px; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border);">
+        <div style="font-size:11px; color:var(--fg-muted); font-family:var(--font-mono); margin-bottom:4px;">THRESHOLD</div>
+        <div style="font-size:24px; font-weight:700; font-family:var(--font-mono);" id="modal-threshold"></div>
+      </div>
+    </div>
+    <div style="font-size:13px; color:var(--fg-muted); font-family:var(--font-mono); margin-bottom:24px;" id="modal-time"></div>
+    <div style="font-size:14px; color:var(--fg); line-height:1.6; margin-bottom:24px;">An alert email was sent to your registered address. Click the guide below to take action.</div>
+    <div style="display:flex; gap:10px;">
+      <a href="#" id="modal-guide-link" class="btn btn-stripe" style="flex:1; justify-content:center;">View Guide</a>
+      <button onclick="document.getElementById('alert-modal').style.display='none'" class="btn btn-outline">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── SIGNAL CARD EXPAND ─────────────────────────────
+  function toggleSignal(el) {
+    const wasExpanded = el.classList.contains('expanded');
+    document.querySelectorAll('.signal-card').forEach(c => c.classList.remove('expanded'));
+    if (!wasExpanded) {
+      el.classList.add('expanded');
+      loadChart(el.dataset.type);
+    }
+  }
+
+  // ── CHART RENDERING ────────────────────────────────
+  const loadedCharts = new Set();
+
+  async function loadChart(signalType) {
+    if (loadedCharts.has(signalType)) return;
+    loadedCharts.add(signalType);
+
+    const canvas = document.getElementById('canvas-' + signalType);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    // Fetch mock chart data from demo endpoint
+    let data = [];
+    try {
+      const res = await fetch(`/demo/signals/${signalType}/json`);
+      const json = await res.json();
+      data = json.history || [];
+    } catch(e) { console.warn('Demo chart load failed:', e); return; }
+
+    if (data.length === 0) {
+      const wrap = document.getElementById('chart-' + signalType);
+      if (wrap && !wrap.querySelector('.no-data-label')) {
+        const nd = document.createElement('div');
+        nd.className = 'no-data-label';
+        nd.textContent = 'No chart data available yet';
+        wrap.appendChild(nd);
+      }
+      return;
+    }
+
+    const w = canvas.offsetWidth;
+    const h = 80;
+    canvas.width = w;
+    canvas.height = h;
+
+    const values = data.map(d => parseFloat(d.value));
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const range = max - min || 1;
+
+    const colors = {
+      dispute_rate: '#FF3B5C',
+      auth_rate: '#FF3B5C',
+      revenue_trend: '#B4FF00',
+      transaction_velocity: '#FFC800',
+      low_volume: '#FF3B5C',
+    };
+    const color = colors[signalType] || '#00E5FF';
+
+    ctx.clearRect(0, 0, w, h);
+
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, color + '44');
+    grad.addColorStop(1, color + '00');
+
+    ctx.beginPath();
+    data.forEach((d, i) => {
+      const x = (i / (data.length - 1)) * w;
+      const y = h - ((parseFloat(d.value) - min) / range) * (h - 12) - 6;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.lineTo(w, h);
+    ctx.lineTo(0, h);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.beginPath();
+    data.forEach((d, i) => {
+      const x = (i / (data.length - 1)) * w;
+      const y = h - ((parseFloat(d.value) - min) / range) * (h - 12) - 6;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    data.forEach((d, i) => {
+      const x = (i / (data.length - 1)) * w;
+      const y = h - ((parseFloat(d.value) - min) / range) * (h - 12) - 6;
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  // Pre-load dispute_rate chart since dispute_rate alert is the active one
+  window.addEventListener('load', () => {
+    setTimeout(() => loadChart('dispute_rate'), 100);
+  });
+
+  // ── ALERT DETAIL MODAL ────────────────────────────
+  function showAlertDetail(id, signalType, signalValue, threshold, firedAt, acknowledged) {
+    const modal = document.getElementById('alert-modal');
+    const labels = {
+      dispute_rate: 'Dispute Rate',
+      auth_rate: 'Auth Rate',
+      revenue_trend: 'Revenue Trend',
+      transaction_velocity: 'Tx Velocity',
+      low_volume: 'Low Volume',
+    };
+    const guideMap = {
+      dispute_rate: 'dispute',
+      auth_rate: 'auth',
+      revenue_trend: 'revenue',
+      transaction_velocity: 'velocity',
+      low_volume: 'volume',
+    };
+    document.getElementById('modal-signal').textContent = labels[signalType] || signalType + ' Alert';
+    document.getElementById('modal-value').textContent = parseFloat(signalValue).toFixed(4);
+    document.getElementById('modal-threshold').textContent = parseFloat(threshold).toFixed(4);
+    document.getElementById('modal-time').textContent = 'Fired ' + new Date(firedAt).toLocaleString() + (acknowledged === 'true' ? ' · Acknowledged' : ' · Active');
+    document.getElementById('modal-guide-link').href = '/guides/' + (guideMap[signalType] || 'risk');
+    modal.style.display = 'flex';
+  }
+
+  // Close modal on outside click
+  document.getElementById('alert-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+  });
+</script>
+</body>
+</html>

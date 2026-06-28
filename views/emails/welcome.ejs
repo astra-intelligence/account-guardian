@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <%- include('partials/styles') %>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">ACCOUNT<span>GUARDIAN</span></div>
+    </div>
+
+    <div class="badge badge-info">WELCOME</div>
+    <h1>Welcome to Account Guardian, <%= merchantName %>.</h1>
+    <p>Your Stripe account monitoring is set up. Here's what happens now and what you can expect.</p>
+
+    <ul class="checklist">
+      <li>We're capturing your account signals — dispute rate, refund rate, chargeback rate, and transaction patterns</li>
+      <li>We're establishing your personalized baseline — so alerts are about <em>your</em> normal, not industry averages</li>
+      <li>We'll email you the moment any signal crosses its threshold — so you can act before Stripe does</li>
+      <li>You have full access to your dashboard with signal history and trend visualization</li>
+    </ul>
+
+    <p>Your <span class="highlight">14-day free trial</span> has started. After the trial, monitoring continues at <strong>$79/month</strong> with no surprise charges — cancel any time from your dashboard settings.</p>
+
+    <div class="action-box">
+      <h2>First step: Check your dashboard</h2>
+      <p>Your dashboard shows your current signal values, baseline thresholds, and alert history. Visit it now to see your account health at a glance.</p>
+    </div>
+
+    <a href="<%= dashboardUrl %>" class="cta">Go to Your Dashboard →</a>
+
+    <div class="footer">
+      Account Guardian by Astramedia · Monitoring Stripe accounts so you don't get surprised<br>
+      Questions? Reply to this email.
+    </div>
+  </div>
+</body>
+</html>

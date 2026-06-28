@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <%- include('partials/styles') %>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">ACCOUNT<span>GUARDIAN</span></div>
+    </div>
+
+    <div class="badge badge-alert">⚠ REFUND RATE ALERT</div>
+    <h1><%= merchantName %>, your refund rate hit <%= (signalValue * 100).toFixed(2) %>%.</h1>
+    <p class="subhead"><%= dateStr %> · Account Guardian monitoring</p>
+
+    <p>Your refund rate has crossed our warning threshold of <span class="highlight"><%= (threshold * 100).toFixed(2) %>%</span>. A sustained elevated refund rate can trigger a Stripe account review — even without active disputes.</p>
+
+    <div class="value-row">
+      <div class="value-card">
+        <div class="label">CURRENT REFUND RATE</div>
+        <div class="value signal-value-danger"><%= (signalValue * 100).toFixed(2) %>%</div>
+      </div>
+      <div class="value-card">
+        <div class="label">THRESHOLD</div>
+        <div class="value signal-threshold"><%= (threshold * 100).toFixed(2) %>%</div>
+      </div>
+      <div class="value-card">
+        <div class="label">OVER BY</div>
+        <div class="value signal-value-danger">+<%= ((signalValue - threshold) * 100).toFixed(2) %>%</div>
+      </div>
+    </div>
+
+    <div class="action-box action-box-warning">
+      <h2>Recommended: Investigate refund patterns</h2>
+      <p>A high refund rate often signals product dissatisfaction, unclear pricing, or fulfillment issues. Review your refund reasons in the Stripe dashboard — if the same SKU keeps getting refunded, start there. If refunds are tied to shipping delays, update your delivery estimates. Consider tightening your refund policy if abuse is a factor, but keep it compliant with your processor's requirements.</p>
+    </div>
+
+    <p>For a full remediation guide, visit: <a href="<%= appUrl %>/guides/high-refund-rate" class="guide-link"><%= appUrl %>/guides/high-refund-rate</a></p>
+
+    <a href="<%= dashboardUrl %>" class="cta">View Your Dashboard →</a>
+
+    <div class="footer">
+      Account Guardian by Astramedia · Monitoring Stripe accounts so you don't get surprised<br>
+      Questions? Reply to this email.
+    </div>
+  </div>
+</body>
+</html>

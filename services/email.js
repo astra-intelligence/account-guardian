@@ -975,6 +975,92 @@ async function sendBaselineReportEmail(toEmail, merchantName, calibrationResult)
   await sendPostmark(toEmail, subject, html);
 }
 
+// ── EJS template rendering (branded email templates) ─────────────────────────
+
+let _app = null;
+
+/**
+ * Initialize the email service with an Express app reference for EJS rendering.
+ * Must be called before using any branded template function.
+ */
+function init(app) {
+  _app = app;
+}
+
+/**
+ * Render an EJS email template located in views/emails/.
+ * @param {string} templateName — filename without .ejs extension (e.g. 'alert-dispute-rate')
+ * @param {object} data — template variables
+ * @returns {Promise<string>} rendered HTML
+ */
+function renderTemplate(templateName, data) {
+  if (!_app) {
+    throw new Error('[email] EJS render not initialized — call email.init(app) from server.js');
+  }
+  return new Promise((resolve, reject) => {
+    _app.render('emails/' + templateName, data, (err, html) => {
+      if (err) return reject(err);
+      resolve(html);
+    });
+  });
+}
+
+/**
+ * Send a branded alert email for a specific signal type.
+ * @param {string} toEmail — recipient
+ * @param {object} opts — { merchantName, signalValue, threshold, dateStr, dashboardUrl, appUrl }
+ * @param {string} templateName — one of: alert-dispute-rate, alert-refund-rate, alert-chargeback-rate, alert-revenue-drop, alert-radar-risk
+ */
+async function sendBrandedAlert(toEmail, templateName, opts) {
+  const subjects = {
+    'alert-dispute-rate':    `⚠ Dispute Rate Alert: ${opts.merchantName}'s rate hit ${(opts.signalValue * 100).toFixed(2)}%`,
+    'alert-refund-rate':     `⚠ Refund Rate Alert: ${opts.merchantName}'s rate hit ${(opts.signalValue * 100).toFixed(2)}%`,
+    'alert-chargeback-rate': `⚠ Chargeback Rate Alert: ${opts.merchantName}'s rate hit ${(opts.signalValue * 100).toFixed(2)}%`,
+    'alert-revenue-drop':    `⚠ Revenue Drop Alert: ${opts.merchantName}'s revenue dropped ${Math.abs(opts.signalValue * 100).toFixed(0)}% WoW`,
+    'alert-radar-risk':      `⚠ Radar Risk Flag: ${opts.merchantName}'s account flagged`,
+  };
+
+  const subject = subjects[templateName] || `⚠ Account Alert: Signal threshold breached`;
+  const html = await renderTemplate(templateName, {
+    merchantName: opts.merchantName,
+    signalValue: opts.signalValue,
+    threshold: opts.threshold,
+    dateStr: opts.dateStr,
+    dashboardUrl: opts.dashboardUrl,
+    appUrl: opts.appUrl || process.env.APP_URL || 'https://foundryiq-3.polsia.app',
+  });
+  await sendPostmark(toEmail, subject, html);
+}
+
+/**
+ * Send branded welcome email using the EJS template.
+ */
+async function sendBrandedWelcome(toEmail, merchantName, dashboardUrl) {
+  const appUrl = process.env.APP_URL || 'https://foundryiq-3.polsia.app';
+  const html = await renderTemplate('welcome', {
+    merchantName,
+    dashboardUrl,
+    appUrl,
+  });
+  await sendPostmark(toEmail, 'Welcome to Account Guardian — your Stripe monitoring is active', html);
+}
+
+/**
+ * Send branded trial-expiring (dunning) email using the EJS template.
+ */
+async function sendBrandedTrialExpiring(toEmail, merchantName, daysRemaining, trialEndDate, dashboardUrl, cancelUrl) {
+  const appUrl = process.env.APP_URL || 'https://foundryiq-3.polsia.app';
+  const html = await renderTemplate('trial-expiring', {
+    merchantName,
+    daysRemaining,
+    trialEndDate,
+    dashboardUrl: dashboardUrl || (appUrl + '/dashboard'),
+    cancelUrl: cancelUrl || (appUrl + '/billing/cancel'),
+    appUrl,
+  });
+  await sendPostmark(toEmail, `Your Account Guardian trial ends in ${daysRemaining} days — keep monitoring?`, html);
+}
+
 module.exports = {
   sendAuditConfirmation,
   sendAuditReport,
@@ -990,6 +1076,11 @@ module.exports = {
   sendBaselineReportEmail,
   formatPct,
   computeVerdict,
+  init,
+  renderTemplate,
+  sendBrandedAlert,
+  sendBrandedWelcome,
+  sendBrandedTrialExpiring,
   ALERT_THRESHOLDS,
   ALERT_LABELS,
   ALERT_REMEDIATION,

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <%- include('partials/styles') %>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">ACCOUNT<span>GUARDIAN</span></div>
+    </div>
+
+    <div class="badge badge-warning">⚠ TRIAL ENDING</div>
+    <h1><%= merchantName %>, your Account Guardian trial ends in <%= daysRemaining %> days.</h1>
+    <p>Your free trial expires on <strong><%= trialEndDate %></strong>. After that, your account health monitoring will <strong>pause</strong> — you'll stop receiving real-time alerts when your Stripe signals cross thresholds.</p>
+
+    <div class="action-box action-box-warning">
+      <h2>What you'll lose if your trial expires:</h2>
+      <ul style="list-style:none;padding:0;margin:0;">
+        <li style="padding:8px 0;font-size:14px;color:#6B6B80;border-bottom:1px solid rgba(255,255,255,0.07);">✓ Daily Stripe account signal monitoring</li>
+        <li style="padding:8px 0;font-size:14px;color:#6B6B80;border-bottom:1px solid rgba(255,255,255,0.07);">✓ Instant email alerts when your metrics cross thresholds</li>
+        <li style="padding:8px 0;font-size:14px;color:#6B6B80;border-bottom:1px solid rgba(255,255,255,0.07);">✓ Your dashboard with full signal history and trend visualization</li>
+        <li style="padding:8px 0;font-size:14px;color:#6B6B80;">✓ We alert you before Stripe acts — not after</li>
+      </ul>
+    </div>
+
+    <p>Continue monitoring for <strong>$79/month</strong> — less than a single dispute response costs to manage. Cancel any time, no questions asked.</p>
+
+    <a href="<%= dashboardUrl %>" class="cta">Continue Monitoring →</a>
+    <p style="margin-top:24px;"><a href="<%= cancelUrl %>" style="font-size:12px;color:#6B6B80;text-decoration:underline;">Cancel before trial ends — no charge</a></p>
+
+    <div class="footer">
+      Account Guardian by Astramedia · Monitoring Stripe accounts so you don't get surprised<br>
+      Questions? Reply to this email.
+    </div>
+  </div>
+</body>
+</html>

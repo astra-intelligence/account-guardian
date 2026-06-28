@@ -7,6 +7,7 @@ const path = require('path');
 const session = require('express-session');
 const { buildLandingContext } = require('./lib/landing-context');
 const { requireLogin, ifLoggedIn } = require('./middleware/auth');
+const emailService = require('./services/email');
 require('./db/index'); // init pool (singleton)
 
 const app = express();
@@ -35,6 +36,9 @@ app.use(express.urlencoded({ extended: true }));
 // EJS view engine. Templates live in ./views/ (entry point: layout.ejs).
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// Initialize email service with Express app reference for EJS template rendering.
+emailService.init(app);
 
 // Health check (no DB query — lets Neon auto-suspend)
 app.get('/health', (_req, res) => res.json({ status: 'healthy' }));
@@ -75,6 +79,9 @@ app.use('/api/audit', require('./routes/audit'));
 app.use('/onboarding', require('./routes/onboarding'));
 app.use('/pricing', require('./routes/pricing'));
 app.use('/investor', require('./routes/investor-routes'));
+
+// Demo route — public, no auth, mock data
+app.use('/demo', require('./routes/demo'));
 
 // /buy — start Stripe OAuth connection (directs to dashboard after auth).
 // Works with or without a session — email taken from query param or session.

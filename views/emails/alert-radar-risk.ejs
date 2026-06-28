@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <%- include('partials/styles') %>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">ACCOUNT<span>GUARDIAN</span></div>
+    </div>
+
+    <div class="badge badge-alert">⚠ RADAR RISK FLAG</div>
+    <h1><%= merchantName %>, Stripe Radar flagged unusual activity on your account.</h1>
+    <p class="subhead"><%= dateStr %> · Account Guardian monitoring</p>
+
+    <p>Stripe Radar has detected activity patterns that may indicate fraud on your account. Radar evaluates each transaction against hundreds of risk signals — a flag means transactions are being blocked or recommended for manual review at an elevated rate.</p>
+
+    <div class="action-box action-box-danger">
+      <h2>Recommended: Review flagged transactions now</h2>
+      <p>Log into your Stripe dashboard and navigate to the Radar section. Review the flagged transactions — look for patterns like multiple attempts from the same IP, rapid small-value charges, or orders from unusual geographic regions. If you see suspicious patterns, enable stricter Radar rules to block the activity. If the flags appear to be false positives, you may need to adjust your Radar rule set or whitelist legitimate traffic patterns.</p>
+    </div>
+
+    <p>For a full remediation guide, visit: <a href="<%= appUrl %>/guides/radar-risk-flag" class="guide-link"><%= appUrl %>/guides/radar-risk-flag</a></p>
+
+    <a href="<%= dashboardUrl %>" class="cta">View Your Dashboard →</a>
+
+    <div class="footer">
+      Account Guardian by Astramedia · Monitoring Stripe accounts so you don't get surprised<br>
+      Questions? Reply to this email.
+    </div>
+  </div>
+</body>
+</html>

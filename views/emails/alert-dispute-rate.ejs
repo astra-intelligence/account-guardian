@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <%- include('partials/styles') %>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">ACCOUNT<span>GUARDIAN</span></div>
+    </div>
+
+    <div class="badge badge-alert">⚠ DISPUTE RATE ALERT</div>
+    <h1><%= merchantName %>, your dispute rate hit <%= (signalValue * 100).toFixed(2) %>%.</h1>
+    <p class="subhead"><%= dateStr %> · Account Guardian monitoring</p>
+
+    <p>Your dispute rate has crossed our warning threshold of <span class="highlight"><%= (threshold * 100).toFixed(2) %>%</span>. Stripe reviews accounts when dispute rates stay elevated for consecutive periods — this means you're at risk of a surprise account review.</p>
+
+    <div class="value-row">
+      <div class="value-card">
+        <div class="label">CURRENT DISPUTE RATE</div>
+        <div class="value signal-value-danger"><%= (signalValue * 100).toFixed(2) %>%</div>
+      </div>
+      <div class="value-card">
+        <div class="label">THRESHOLD</div>
+        <div class="value signal-threshold"><%= (threshold * 100).toFixed(2) %>%</div>
+      </div>
+      <div class="value-card">
+        <div class="label">OVER BY</div>
+        <div class="value signal-value-danger">+<%= ((signalValue - threshold) * 100).toFixed(2) %>%</div>
+      </div>
+    </div>
+
+    <div class="action-box action-box-danger">
+      <h2>Recommended: Respond to disputes immediately</h2>
+      <p>Log into your Stripe dashboard, pull the list of open disputes, and respond to each one within the deadline. Chargebacks are folded into this signal. Focus on pre-emptive communication with customers before they escalate — clear cancellation policies and proactive refund offers reduce escalations. If you believe many disputes are fraudulent, enable Stripe Radar rules to flag high-risk transactions before they capture.</p>
+    </div>
+
+    <p>For a full remediation guide, visit: <a href="<%= appUrl %>/guides/high-dispute-rate" class="guide-link"><%= appUrl %>/guides/high-dispute-rate</a></p>
+
+    <a href="<%= dashboardUrl %>" class="cta">View Your Dashboard →</a>
+
+    <div class="footer">
+      Account Guardian by Astramedia · Monitoring Stripe accounts so you don't get surprised<br>
+      Questions? Reply to this email.
+    </div>
+  </div>
+</body>
+</html>
